@@ -57,5 +57,7 @@ jobs:
 
     - name: Update Digest Secret
       if: env.DIGEST_CHANGED == 'true'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         echo "${{ env.CURRENT_DIGEST }}" | gh secret set UBUNTU_LATEST_DIGEST --repo ${{ github.repository }} --body
