@@ -1,9 +1,14 @@
 name: Build and Push UBUNTOOLS
 
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 * * *' # Run daily at midnight
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force build and push'
+        required: false
+        default: 'false'
 
 jobs:
   build-and-push:
@@ -22,9 +27,35 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
 
+    - name: Get Ubuntu Latest Digest
+      id: get_digest
+      run: |
+        CURRENT_DIGEST=$(docker manifest inspect ubuntu:latest | jq -r '.manifests[0].digest')
+        echo "CURRENT_DIGEST=$CURRENT_DIGEST" >> $GITHUB_ENV
+
+    - name: Compare Digests
+      id: compare_digest
+      run: |
+        if [ "${{ secrets.UBUNTU_LATEST_DIGEST }}" != "${{ env.CURRENT_DIGEST }}" ]; then
+          echo "Digest changed, proceeding with build"
+          echo "DIGEST_CHANGED=true" >> $GITHUB_ENV
+        else
+          echo "Digest not changed, skipping build"
+          echo "DIGEST_CHANGED=false" >> $GITHUB_ENV
+
+    - name: Set Force Build
+      if: github.event.inputs.force == 'true'
+      run: echo "DIGEST_CHANGED=true" >> $GITHUB_ENV
+
     - name: Build and push Docker image
+      if: env.DIGEST_CHANGED == 'true'
       uses: docker/build-push-action@v6
       with:
         context: .
         push: true
         tags: viorelpe/ubuntools:latest
+
+    - name: Update Digest Secret
+      if: env.DIGEST_CHANGED == 'true'
+      run: |
+        echo "${{ env.CURRENT_DIGEST }}" | gh secret set UBUNTU_LATEST_DIGEST --repo ${{ github.repository }} --body
