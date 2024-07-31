@@ -17,6 +17,10 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write  # This gives write access to contents, needed for updating variables
+      actions: write   # This gives write access to actions, needed for updating variables
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -64,4 +68,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "${{ env.CURRENT_DIGEST }}" | gh variable set UBUNTU_LATEST_DIGEST --repo ${{ github.repository }}
+        echo "${{ env.CURRENT_DIGEST }}" | gh variable set UBUNTU_LATEST_DIGEST --repo ${{ github.repository }} --body
