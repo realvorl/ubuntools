@@ -68,4 +68,4 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "${{ env.CURRENT_DIGEST }}" | gh variable set UBUNTU_LATEST_DIGEST --repo ${{ github.repository }} --body
+        echo "${{ env.CURRENT_DIGEST }}" | gh variable set UBUNTU_LATEST_DIGEST --repo ${{ github.repository }} --body -
