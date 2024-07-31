@@ -31,12 +31,12 @@ jobs:
       id: get_digest
       run: |
         CURRENT_DIGEST=$(docker manifest inspect ubuntu:latest | jq -r '.manifests[0].digest')
-        echo "CURRENT_DIGEST=$CURRENT_DIGEST" >> $GITHUB_ENV
+        echo "CURRENT_DIGEST=${CURRENT_DIGEST}" >> $GITHUB_ENV
 
     - name: Compare Digests
       id: compare_digest
       run: |
-        if [ "${{ secrets.UBUNTU_LATEST_DIGEST }}" != "${{ env.CURRENT_DIGEST }}" ]; then
+        if [[ "${{ secrets.UBUNTU_LATEST_DIGEST }}" != "${{ env.CURRENT_DIGEST }}" ]]; then
           echo "Digest changed, proceeding with build"
           echo "DIGEST_CHANGED=true" >> $GITHUB_ENV
         else
