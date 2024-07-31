@@ -66,6 +66,6 @@ jobs:
     - name: Update Digest Variable
       if: env.DIGEST_CHANGED == 'true'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}
       run: |
         echo "${{ env.CURRENT_DIGEST }}" | gh variable set UBUNTU_LATEST_DIGEST --repo ${{ github.repository }} --body -
