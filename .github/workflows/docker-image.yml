@@ -34,25 +34,18 @@ jobs:
       id: get_digest
       run: |
         CURRENT_DIGEST=$(docker manifest inspect ubuntu:latest | jq -r '.manifests[0].digest')
-        CURRENT_DIGEST_SHORT=$(echo "${CURRENT_DIGEST}" | cut -d':' -f2)
         echo "CURRENT_DIGEST=${CURRENT_DIGEST}" >> $GITHUB_ENV
-        echo "CURRENT_DIGEST_SHORT=${CURRENT_DIGEST_SHORT}" >> $GITHUB_ENV
-
-    - name: Load Previous Digest
-      id: load_previous_digest
-      run: |
-        PREVIOUS_DIGEST_SHORT=$(echo "${{ env.UBUNTU_LATEST_DIGEST }}" | cut -d':' -f2)
-        echo "PREVIOUS_DIGEST_SHORT=${PREVIOUS_DIGEST_SHORT}" >> $GITHUB_ENV
 
     - name: Compare Digests
       id: compare_digest
       run: |
-        if [ "${{ env.PREVIOUS_DIGEST_SHORT }}" != "${{ env.CURRENT_DIGEST_SHORT }}" ]; then
+        if [ "${{ env.UBUNTU_LATEST_DIGEST }}" != "${{ env.CURRENT_DIGEST }}" ]; then
           echo "Digest changed, proceeding with build"
           echo "DIGEST_CHANGED=true" >> $GITHUB_ENV
         else
           echo "Digest not changed, skipping build"
           echo "DIGEST_CHANGED=false" >> $GITHUB_ENV
+        fi
 
     - name: Set Force Build
       if: github.event.inputs.force == 'true'
