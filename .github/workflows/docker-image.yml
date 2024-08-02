@@ -63,7 +63,7 @@ jobs:
         echo "GITHUB_REF=${GITHUB_REF}"
         echo "github.ref=${{ github.ref }}"
         echo "= = ="
-        git tag -n ${{ github.ref }})
+        git tag -n ${{ github.ref }}
         echo "= = ="
         git tag -n ${GITHUB_REF##*/}
         echo "= = ="
