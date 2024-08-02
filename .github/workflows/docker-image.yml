@@ -9,6 +9,9 @@ on:
         description: 'Force build and push'
         required: false
         default: 'false'
+  push:
+    tags:
+      - '*'
 
 env:
   UBUNTU_LATEST_DIGEST: ${{ vars.UBUNTU_LATEST_DIGEST }}
@@ -52,8 +55,14 @@ jobs:
         fi
 
     - name: Set Force Build
-      if: github.event.inputs.force == 'true'
+      if: github.event.inputs.force == 'true' || startsWith(github.ref, 'refs/tags/')
       run: echo "DIGEST_CHANGED=true" >> $GITHUB_ENV
+
+    - name: Extract tools from tag
+      run: echo "TOOLS=$(echo ${GITHUB_REF##*/} | tr '/' ' ')" >> $GITHUB_ENV
+
+    - name: Build Docker image
+      run: docker build --build-arg TOOLS="${{ env.TOOLS }}" -t viorelpe/ubuntools:latest .
 
     - name: Build and push Docker image
       if: env.DIGEST_CHANGED == 'true'
@@ -61,7 +70,8 @@ jobs:
       with:
         context: .
         push: true
-        tags: viorelpe/ubuntools:latest
+        tags: viorelpe/ubuntools:${{ github.ref_name }}
+        build-args: TOOLS=${{ env.TOOLS }}
 
     - name: Update Digest Variable
       if: env.DIGEST_CHANGED == 'true'

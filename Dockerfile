@@ -1,10 +1,9 @@
 FROM ubuntu:latest
 
-RUN apt update
-
 # Install dependencies and clean up
-RUN apt-get update && \
-    apt-get install -y bash jq curl && \
+ARG TOOLS=""
+RUN apt-get update -qq && \
+    apt-get install -y bash $TOOLS && \
     rm -rf /var/lib/apt/lists/* && \
     apt-get clean && \
     rm -rf /tmp/* /var/tmp/*
@@ -19,7 +18,6 @@ LABEL org.opencontainers.image.source="https://hub.docker.com/_/ubuntu"
 LABEL org.opencontainers.image.licenses="https://ubuntu.com/legal/intellectual-property-policy"
 
 # Sets an /app directory as default 
-# because you are probably working on "some sort" of applicaition
 WORKDIR /app
 
 # Set a default command (optional)
