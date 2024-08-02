@@ -62,7 +62,10 @@ jobs:
       run: |
         echo "GITHUB_REF=${GITHUB_REF}"
         echo "github.ref=${{ github.ref }}"
-        echo "$(git tag -n ${{ github.ref }})"
+        echo "= = ="
+        git tag -n ${{ github.ref }})
+        echo "= = ="
+        git tag -n ${GITHUB_REF##*/}
         echo "= = ="
         TAG_MESSAGE=$(git tag -l --format='%(contents)' "${GITHUB_REF##*/}")
         echo "TOOLS=${TAG_MESSAGE}" >> $GITHUB_ENV
