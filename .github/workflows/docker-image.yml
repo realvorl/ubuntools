@@ -66,7 +66,6 @@ jobs:
         echo "my try: $(git tag -n pdf-processing)"
         echo "my try2: $(git tag -n ${GITHUB_REF##*/})"
         echo "$TOOLS ] and [ ${TAG_MESSAGE}"
-        exit 0
 
     - name: Build Docker image
       run: docker build --build-arg TOOLS="${{ env.TOOLS }}" -t viorelpe/ubuntools:latest .
