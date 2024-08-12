@@ -67,22 +67,24 @@ jobs:
       run: echo "DIGEST_CHANGED=true" >> $GITHUB_ENV
 
     - name: Set TOOL & TAG
+      if: env.DIGEST_CHANGED == 'true'
       run: |
         TAG_MESSAGE=$(git tag -l --format='%(contents)' "${GITHUB_REF##*/}")
         echo "TOOLS=${TAG_MESSAGE}" >> $GITHUB_ENV
         echo "UT_TAG=latest" >> $GITHUB_ENV
         
     - name: Manual trigger - overriding TOOLS
-      if: github.event_name == 'workflow_dispatch' && github.event.inputs.tools != ''
+      if: env.DIGEST_CHANGED == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.tools != ''
       run: |
         echo "TOOLS=${{github.event.inputs.tools}}" >> $GITHUB_ENV
 
     - name: Manual trigger - overriding TAG
-      if: github.event_name == 'workflow_dispatch' && github.event.inputs.tag != ''
+      if: env.DIGEST_CHANGED == 'true' && github.event_name == 'workflow_dispatch' && github.event.inputs.tag != ''
       run: | 
         echo "UT_TAG=${{github.event.inputs.tag}}" >> $GITHUB_ENV
 
     - name: Build Docker image
+      if: env.DIGEST_CHANGED == 'true'
       run: docker build --build-arg TOOLS="${{env.TOOLS}}" -t "viorelpe/ubuntools:${{env.UT_TAG}}" .
 
     - name: Build and push Docker image
