@@ -1,0 +1,6 @@
+<svg height="20" width="110" xmlns="http://www.w3.org/2000/svg">
+  <rect width="30" height="20" fill="#000000" />
+  <rect x="30" width="80" height="20" fill="#503250" />
+  <text text-anchor="middle" font-weight="bold" font-size="14" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" fill="#ffffff" x="15" y="50%" dy=".35em">🛠️</text>
+  <text text-anchor="middle" font-size="15" font-family="Verdana,Geneva,DejaVu Sans,sans-serif" fill="#ffffff" x="70" y="50%" dy=".35em">ubunTools</text>
+</svg>
