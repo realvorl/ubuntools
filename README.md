@@ -1,4 +1,4 @@
-# ubunTools: I *just* need Ubuntu with some tools
+# ubun🔨ools: I *just* need Ubuntu with some tools
 
 For when you just want the latest `UBUNTU` + `bash` with a few `tools`.
 
